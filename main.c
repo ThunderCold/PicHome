@@ -20,6 +20,7 @@ void main(void)
     while(1) {
         strcpy(str, GetString()); // GetString() in uart.c
         char data_in = str[0];
+        char t, h;
         if(data_in=='1')
         {
             ClearBuffer();
@@ -35,7 +36,10 @@ void main(void)
             ClearBuffer();
             DHT11_Start();
             DHT11_CheckResponse();
-            UART_Write_Text(ReadData());
+            ReadData(&t, &h);
+            char ret[15];
+            sprintf(ret, "%02d", t);
+            UART_Write_Text(ret);
             /*if(tmp==0)
             {
                 UART_Write_Text("25*40"); // PIC18 send data to app (format: tt*hh)
@@ -46,6 +50,13 @@ void main(void)
                 UART_Write_Text("33*55"); // for temp
                 tmp=0;
             }*/
+        }
+        else if(data_in=='h')
+        {
+            ClearBuffer();
+            char ret[15];
+            sprintf(ret, "%02d", h);
+            UART_Write_Text(ret);
         }
     }
     return;

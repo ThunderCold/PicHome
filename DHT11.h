@@ -13,7 +13,7 @@
 void DHT11_Start();
 void DHT11_CheckResponse();
 char DHT11_ReadData();
-char *ReadData();
+void ReadData(char *t, char *h);
 void WriteData(char RH_Decimal, char RH_Integral, char T_Decimal, char T_Integral, char Checksum);
 
 /* External functions to be implemented elsewhere */

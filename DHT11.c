@@ -18,10 +18,10 @@
 void DHT11_Start();
 void DHT11_CheckResponse();
 char DHT11_ReadData();
-char *ReadData();
+void ReadData(char *t, char *h);
 void WriteData(char RH_Decimal, char RH_Integral, char T_Decimal, char T_Integral, char Checksum);
 
-char *ReadData(){
+void ReadData(char *t, char *h){
     char RH_Decimal;
     char RH_Integral;
     char T_Decimal;
@@ -32,9 +32,11 @@ char *ReadData(){
     T_Integral = DHT11_ReadData();   /* Read Temp integral value */
     T_Decimal = DHT11_ReadData();    /* Read Temp decimal value */
     Checksum = DHT11_ReadData();     /* Read checksum */
-    char ret[20];
+    *t = T_Integral;
+    *h = RH_Integral;
+    /*char ret[20];
     sprintf(ret, "%d*%d", T_Integral, RH_Integral);
-    return ret;
+    return ret;*/
 }
 
 void WriteData(char RH_Decimal, char RH_Integral, char T_Decimal, char T_Integral, char Checksum){
