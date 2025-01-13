@@ -33,7 +33,10 @@ void main(void)
         else if(data_in=='t') // request temp. and humi.
         {
             ClearBuffer();
-            if(tmp==0)
+            DHT11_Start();
+            DHT11_CheckResponse();
+            UART_Write_Text(ReadData());
+            /*if(tmp==0)
             {
                 UART_Write_Text("25*40"); // PIC18 send data to app (format: tt*hh)
                 tmp=1;
@@ -42,7 +45,7 @@ void main(void)
             {
                 UART_Write_Text("33*55"); // for temp
                 tmp=0;
-            }
+            }*/
         }
     }
     return;
