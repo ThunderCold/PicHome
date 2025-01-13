@@ -6,8 +6,12 @@
 #define _XTAL_FREQ 8000000 
 #define LED LATAbits.LATA1
 int enable = 1;
-int mode; // 1:auto, 2:manual
+int mode = 2; // 1:auto, 2:manual
 char str[20];
+
+#define angle_0 725
+#define angle_neg 705
+#define angle_pos 795
 
 void main(void) 
 {
@@ -17,7 +21,10 @@ void main(void)
     TRISAbits.RA3 = 0;
     TRISAbits.RA4 = 0;
     int tmp=0;
-    mode = 1;
+    TRISCbits.TRISC2=0;	// RC2 pin is output.
+    //CCP1CONbits.CCP1M = 0b1100;
+    CCPR1L = angle_0 >> 2;
+    CCP1CONbits.DC1B = angle_0 & 0x03;
     while(1) {
         
         strcpy(str, GetString()); // GetString() in uart.c
@@ -76,6 +83,24 @@ void main(void)
         {
             ClearBuffer();
             UART_Write_number(ADC_Read());
+        }
+        else if(data_in == 'u')
+        {
+            ClearBuffer();
+            CCPR1L = angle_pos >> 2;
+            CCP1CONbits.DC1B = angle_pos & 0x03;
+        }
+        else if(data_in == 'd')
+        {
+            ClearBuffer();
+            CCPR1L = angle_neg >> 2;
+            CCP1CONbits.DC1B = angle_neg & 0x03;
+        }
+        else if(data_in == 's')
+        {
+            ClearBuffer();
+            CCPR1L = angle_0 >> 2;
+            CCP1CONbits.DC1B = angle_0 & 0x03;
         }
         if(mode == 1)
         {
