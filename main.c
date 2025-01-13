@@ -6,6 +6,7 @@
 #define _XTAL_FREQ 8000000 
 #define LED LATAbits.LATA1
 int enable = 1;
+int mode; // 1:auto, 2:manual
 char str[20];
 
 void main(void) 
@@ -16,8 +17,9 @@ void main(void)
     TRISAbits.RA3 = 0;
     TRISAbits.RA4 = 0;
     int tmp=0;
-    
+    mode = 1;
     while(1) {
+        
         strcpy(str, GetString()); // GetString() in uart.c
         char data_in = str[0];
         char t, h;
@@ -58,6 +60,39 @@ void main(void)
             sprintf(ret, "%02d", h);
             UART_Write_Text(ret);
         }
+        else if(data_in == 'a')
+        {
+            //UART_Write_Text("auto!");
+            ClearBuffer();
+            mode = 1; // auto
+        }
+        else if(data_in == 'm')
+        {
+            //UART_Write_Text("manual!");
+            ClearBuffer();
+            mode = 2; // manual
+        }
+        else if(data_in=='l') //light
+        {
+            ClearBuffer();
+            UART_Write_number(ADC_Read());
+        }
+        if(mode == 1)
+        {
+            //UART_Write_Text("a");
+            int value = ADC_Read();
+            if(value > 100)
+            {
+                //UART_Write_Text("0");
+                LED = 0;
+            }
+            else
+            {
+                //UART_Write_Text("1");
+                LED = 1;
+            }
+        }
+        
     }
     return;
 }
@@ -70,6 +105,17 @@ void __interrupt(high_priority) Hi_ISR(void)
         enable = 0;  
         ClearBuffer(); 
         INT0IF = 0;    
+    }
+    if(RCIF)
+    {
+        if(RCSTAbits.OERR)
+        {
+            CREN = 0;
+            Nop();
+            CREN = 1;
+        }
+        
+        MyusartRead();
     }
     return;
 }

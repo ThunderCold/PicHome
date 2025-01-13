@@ -32,7 +32,7 @@
 #define	_ADC_H
 
 void ADC_Initialize() ;
-int ADC_Read(int channel);
+int ADC_Read();
 
 #endif
 

@@ -37,7 +37,7 @@ void UART_Initialize() {
     PIE1bits.TXIE = 0; //TXIE: EUSART Transmit Interrupt Enable bit, 1 = Enables the EUSART transmit interrupt, 0 = Disables the EUSART transmit interrupt      
     IPR1bits.TXIP = 0; //TXIP: EUSART Transmit Interrupt Priority bit, 1 = High priority, 0 = Low priority         
     PIE1bits.RCIE = 1; //RCIE: EUSART Receive Interrupt Enable bit, 1 = Enables the EUSART receive interrupt, 0 = Disables the EUSART receive interrupt             
-    IPR1bits.RCIP = 0; //RCIP: EUSART Receive Interrupt Priority bit, 1 = High priority, 0 = Low priority      
+    IPR1bits.RCIP = 1; //RCIP: EUSART Receive Interrupt Priority bit, 1 = High priority, 0 = Low priority      
              
     }
 
@@ -51,6 +51,12 @@ void UART_Write(unsigned char data)  // Output on Terminal
 void UART_Write_Text(char* text) { // Output on Terminal, limit:10 chars
     for(int i=0;text[i]!='\0';i++)
         UART_Write(text[i]);
+}
+
+void UART_Write_number(int number) { // Output on Terminal, limit:10 chars
+    char send[20];
+    sprintf(send, "%d\r", number);
+    UART_Write_Text(send);
 }
 
 void ClearBuffer(){
@@ -103,17 +109,7 @@ int GetLen(){
 void __interrupt(low_priority)  Lo_ISR(void)
 {
     //UART_Write_Text("interrupt low\r\n");
-    if(RCIF)
-    {
-        if(RCSTAbits.OERR)
-        {
-            CREN = 0;
-            Nop();
-            CREN = 1;
-        }
-        
-        MyusartRead();
-    }
+    
     
    // process other interrupt sources here, if required
     return;
