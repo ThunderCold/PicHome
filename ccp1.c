@@ -2,6 +2,7 @@
 
 void CCP1_Initialize() {
     TRISCbits.TRISC2=0;	// RC2 pin is output.
+    TRISCbits.RC1 = 0;
     
     T2CONbits.TMR2ON = 0b1;
     T2CONbits.T2CKPS = 0b10;
@@ -11,6 +12,7 @@ void CCP1_Initialize() {
     
     // PWM mode, P1A, P1C active-high; P1B, P1D active-high
     CCP1CONbits.CCP1M = 0b1100;
+    CCP2CONbits.CCP2M = 0b1100;
     
     // CCP1/RC2 -> Output
     LATC = 0;
