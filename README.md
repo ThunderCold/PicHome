@@ -2,7 +2,7 @@
 
 ## 題目
 
-HomePic 智慧家庭
+PicHome 智慧家庭
 
 ## 組員
 
